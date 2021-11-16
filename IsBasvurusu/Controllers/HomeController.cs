@@ -58,7 +58,7 @@ namespace IsBasvurusu.Controllers
                 _db.SaveChanges();
 
                 //TODO: Returnredirect another action
-                return View();
+                return RedirectToAction("Index","Home");
             }
             return View(viewModel);
         }
