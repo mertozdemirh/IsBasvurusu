@@ -1,8 +1,34 @@
-﻿@{
+﻿@model HomeViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<form asp-controller="Home" asp-action="Index" method="post">
+    <h1>İş Başvurusu</h1>
+    <div asp-validation-summary="All"></div>
+
+    <div class="mb-3">
+        <label class="form-label" asp-for="Kisi.Ad"></label>
+        <input asp-for="Kisi.Ad" class="form-control" />
+        <span asp-validation-for="Kisi.Ad"></span>
+
+        <label class="form-label" asp-for="Kisi.Soyad"></label>
+        <input asp-for="Kisi.Soyad" class="form-control" />
+        <span asp-validation-for="Kisi.Soyad"></span>
+    </div>
+
+    <div class="mb-3">
+        @for (int i = 0; i < Model.sehirlerModel.Count; i++)
+        {
+            <div>
+                <input type="hidden" asp-for="@Model.sehirlerModel[i].SehirId" />
+                <input type="hidden" asp-for="@Model.sehirlerModel[i].SehirAd" />
+                <label>
+                <input type="checkbox" asp-for="@Model.sehirlerModel[i].SeciliMi" />
+                    @Model.sehirlerModel[i].SehirAd
+                </label>
+            </div>
+        }
+    </div>
+    <button class="btn btn-primary">GÖNDER</button>
+</form>
