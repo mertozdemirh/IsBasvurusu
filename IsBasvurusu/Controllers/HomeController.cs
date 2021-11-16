@@ -38,8 +38,29 @@ namespace IsBasvurusu.Controllers
         [HttpPost,ValidateAntiForgeryToken]
         public IActionResult Index(HomeViewModel viewModel)
         {
-            var result = viewModel;
-            return View();
+            if (viewModel.sehirlerModel.Count(x=>x.SeciliMi)<3)
+            {
+                ModelState.AddModelError("", "En az 3 şehir seçmek zorundasınız.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var seciliSehirler = viewModel.sehirlerModel.Where(x => x.SeciliMi).ToList();
+                int[] seciliSehirIdleri = seciliSehirler.Select(x => x.SehirId).ToArray();
+                Kisi kisi = new Kisi()
+                {
+                    Ad = viewModel.Kisi.Ad,
+                    Soyad = viewModel.Kisi.Soyad,
+                    Sehirler = _db.Sehirler.Where(x => seciliSehirIdleri.Contains(x.Id)).ToList()
+                };
+
+                _db.Kisiler.Add(kisi);
+                _db.SaveChanges();
+
+                //TODO: Returnredirect another action
+                return View();
+            }
+            return View(viewModel);
         }
 
         public IActionResult Privacy()
